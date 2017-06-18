@@ -1,0 +1,92 @@
+---
+title: ""
+geometry: textwidth=18cm,textheight=24cm
+lang: pt-br
+header-includes:
+- \usepackage{setspace}
+- \usepackage{indentfirst}
+- \usepackage[utf8]{inputenc}
+- \usepackage{mathptmx}
+- \usepackage{enumerate}
+- \usepackage{url} 
+- \usepackage{lipsum}
+- \usepackage{multicol}
+output: pdf_document
+fontsize: 10bp
+---
+
+
+\begin{titlepage}
+\begin{center}
+\thispagestyle{empty}
+\begin{figure}[!htb]
+\begin{center}
+\begin{minipage}[b]{0.5\linewidth}
+\begin{center}
+\end{center}
+\end{minipage}
+\begin{minipage}[b]{0.7\linewidth}
+\begin{center}
+\vspace*{1cm}
+ {\large \bf Universidade Estadual de Campinas\\[5pt]
+Instituto de Matemática, Estatística e Computação Cientifica\\[3pt]
+Departamento de Estatística}
+\end{center}
+\end{minipage}
+\end{center}
+\end{figure}
+\vspace*{\stretch{1}}
+\begin{center}
+\vspace*{5cm}
+{\huge \bf Relatório \\[7pt]
+}
+\end{center}
+\vspace*{\stretch{1}}
+\begin{center}
+\vspace*{4cm}
+{\Large \bf Hugo Calegari  RA:155738 \\
+Leonardo Uchoa Pedreira RA:156231\break
+}\\[3pt]
+{\large \bf Professor: Verônica}\\[5pt]
+\end{center}
+\vspace*{\stretch{1}}
+\centerline{\bf Campinas-SP, 29 de Junho de 2017}
+\vspace*{\stretch{1}}
+\end{center}
+\end{titlepage}
+
+\onehalfspacing
+\newpage
+
+#Introdução Bootstrap
+
+O método de bootstrap faz parte de uma classe de métodos não-paramétricos de Monte Carlo que estimam a distribuição de uma população ou uma característica (parâmetro de interesse) por meio de reamostragem.
+
+Métodos de reamostragem consideram as amostras como uma população finita, a partir da qual reamostras são tomadas para estimar características e realizar inferências a respeito desta população. 
+
+#Inferências baseadas em percentis pelo método de bootstrap
+
+Ao se comparar dois grupos independentes, o método é aplicado como segue. Gera-se amostra por bootstrap para cada grupo:
+
+- Para o j-ésimo grupo, obter amostras de bootstrap via amostragem aleatória com reposição ($n_{j}$) da seguinte amostra: $X_{1j}, \dots, X_{nj}$, para obter a seguinte: $X_{1j}^{*}, \dots, X_{nj}^{*}$;
+
+Seja $\hat{\theta_{j}^{*}}$ a estimativa por bootstrap de $\theta_{j}$, tal que este parâmetro está associado com alguma característica de interesse. Seja, ainda, $D^{*} = \hat{\theta_{1}^{*}} - \hat{\theta_{2}^{*}}$. Ao se repetir este processo $B$ vezes (quantidade de réplicas) gera-se $D_{1}^{*}, \dots,  D_{B}^{*}$. Defina $l = \frac{\alpha}{2} B$ (determinação do limite inferior do intervalo de confiança), arredonde para o inteiro mais próximo, e $u = B - l$ (limite superior). Com isso, um intervalo de confiança aproximado de $1- \alpha$ para a diferença entre os verdadeiros parâmetros ($\theta_{1} - \theta_{2}$) é: $[D_{(l+1)}^{*}, D_{(u)}^{*}]$, em que $D_{(1)}^{*} \le \dots \le D_{(B)}^{*}$.
+
+
+Uma vez que se quer testar a hipótese: $H_{0}: \theta_{1} = \theta_{2}$, pode-se utilizar as seguintes estruturas de acordo com o que segue. Para as estimativas de bootstrap de $\hat{\theta}^{*}_{1}$ e $\hat{\theta}^{*}_{2}$, seja $p^{*} = P(\hat{\theta}^{*}_{1} >  \hat{\theta}^{*}_{2})$ (pode-se estimar esta probabilidade com o uso da proporção de $\hat{\theta}^{*}_{1} >  \hat{\theta}^{*}_{2}$).
+
+Sob a hipótese nula (igualdade dos verdadeiros parâmetros), assintoticamente (para n e B suficientemente grandes), $p^{*}$ tem distribuição uniforme. Assim, rejeita-se $H_{0}$ se $p^{*} \le \alpha/2$ ou se $p^{*} \ge 1 - \alpha/2$. Neste caso, a forma como foi estimado o valor de $p^{*}$ é: 
+
+- Seja A  número de valores que são maiores que zero para todos os valores das diferenças obtidos via bootstrap, isto é, entre os valores $D_{1}^{*}, \dots,  D_{B}^{*}$. Consequentemente, pode-se estabelecer: $p^{*} = A/B$.
+
+Por conveniência é adotado a o seguinte valor de $p$ estimado: $p_{m}^{*} = \min(p^{*}, 1-p^{*})$ (chamado de p-valor generalizado). Com isso, rejeita-se $H_{0}$ se $p_{m}^{*} \le \alpha/2$.
+
+
+#Comparação de M-estimadores
+
+Os M-estimadores que serão avaliados são os de locação. Quando se compara estes estimadores com dois grupos independentes, ainda se percebe que a inferência baseada nos percentis por meio do método de bootstrap é o melhor método. Um intervalo de confiança baseado na estimativa do erro padrão fornecerá boa probabilidade de cobertura quando o tamanho amostral é suficientemente grande, ou seja, para se ter razoável aproximação do erro padrão necessita-se de uma população para reamostragem (amostra) relativamente grande, para que características da variabilidade populacional seja captada. A boa cobertura também depende da suposição de que as diferenças etimadas são normalmente distribuídas, porém, é desconhecido o quão grande é o tamanho amostral deveria ser antes de que a aproximação seja considerada, particularmente quando a distribuição é assimétrica.
+
+Quando os tamanhos amostrais são pequenos, todas as indicações são de que o método de percentil por bootstrap é o melhor, então este é recomendado, até existir boa evidência de que algum outro método possa ser utilizado em seu lugar.
+
+
+#Comparação de média aparadas e medianas

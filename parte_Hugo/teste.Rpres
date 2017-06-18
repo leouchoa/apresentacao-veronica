@@ -27,7 +27,7 @@ Estratégia (continuação)
 ========================================================
 - Define-se: $l = \frac{\alpha}{2} B$ e $u = B - l$;
 
-- Assim, um I.C. por bootstrap é: $[D_{l+1}^{*}, D_{u}^{*}]$, tal que $D_{1}^{*} \le \dots \le D_{B}^{*}$;
+- Assim, um I.C. por bootstrap é: $[D_{(l+1)}^{*}, D_{(u)}^{*}]$, tal que $D_{(1)}^{*} \le \dots \le D_{(B)}^{*}$;
 
 Sob a hipótese de igualdade das características
 ========================================================
