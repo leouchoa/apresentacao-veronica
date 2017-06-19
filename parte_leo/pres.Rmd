@@ -1,0 +1,114 @@
+---
+title: "Comparação de Dois Grupos"
+author: "Leonardo Uchoa, Hugo Calegari"
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Objetivo
+
+Apresentar algumas estratégias para comparação de grupos em situações fora do habitual.
+
+O que será coberto :
+
+- Técnicas descritivas e Inferenciais com a Função de Deslocamento;
+
+- Técnicas Inferenciais sobre percentis baseadas em bootstrap.
+
+# Função de Deslocamento
+
+## Habitualmente...
+
+Habitualmente, comparamos dois grupos (tratamento e controle) por medidas de locação e/ou escala para encontrar um vencedor sobre as métricas estabelecidas. Um exemplo é o modelo ANOVA, 
+
+$$
+y_{ij} = \mu + \alpha_i + \epsilon_{ij} \\
+\epsilon_{ij} \sim N(0,\sigma^2)
+$$
+que utiliza médias. Entretanto, nem sempre essas hipóteses são razoáveis.
+
+Exemplo ?
+
+## Assim
+
+```{r}
+curve(dchisq(x,df = 4),from = 0,to = 15,ylab="Densidade",main = expression(paste("Normal Padrão Vs ", chi^2)));curve(dnorm(x,mean = 6,sd = 4),from = 0,to = 15,add = T)
+```
+
+
+Visivelmente, não há um claro vencedor absoluto.  E agora ? 
+
+
+## Solução
+
+Compare os grupos com a Função de Deslocamento (Shift Function).
+
+**Definição: ** _Sejam $y_q$ e $x_q$ os quantis dos grupos de tratamento e controle, respectivamente .A Função de Deslocamento $\Delta(x_q)$ é definida como $\Delta(x_q) = y_q - x_q$_ 
+
+**Interpretação:** A Função de Deslocamento $\Delta(x_q)$ mede quanto o grupo controle deve deslocado de forma a ser comparável ao grupo experimental, para um q-ésimo quantil.
+<!-- ## Exemplo -->
+
+<!-- ```{r} -->
+<!-- oz <- read.table("ozone.txt") -->
+<!-- g2plot(oz$V1,oz$V2) -->
+<!-- ``` -->
+
+## Coisas boas sobre ela
+
+- Utiliza quantis;
+- Intuitiva;
+- Não assume distribuição; 
+- Pode inclusive ser utilizada quando os grupos são dependentes;
+- Gráficos !! (grafique $x_q$ VS $\Delta(x_q)$)
+
+## Inferência
+
+Será dada na forma de Intervalos de Confianças *simultâneas*. São de dois tipos:
+
+- Baseados no distâncias de Kolmogorov;
+    - Sband (distância usual);
+    - Wband (distância ponderada);
+- Baseados somente nos decis.
+
+## Banda-S e Banda-W
+
+Como são baseadas nas distâncias $d_K(x)=|\hat{F}(x) - \hat{G}(x)|$ de Kolmogorov, as bandas herdam as características de $d_K(x)$. Logo, é importante levar em consideração que
+
+- A banda-S tende a ser mais (menos) sensível à diferenças no que ocorrem ao redor do centro (cauda) das distribuições do que a banda-W;
+- A banda-S forma intervalos assintóticamente mais largos e menos estáveis que a banda-W;
+- A banda-W fornece resultados exatos.
+
+## Intervalos para Decis
+
+Baseados nas estimativas de Harrell-Davis para os decis. Pontos importantes são:
+
+- Podem ser mais eficientes o que as bandas-S/W se amostramos de distribuições com caudas leves;
+- Utilização de bootstrap para aumentar precisão dos erros padrão;
+- Intervalos aproximados (cuidado !!);
+- Se as amostras não são normais e se 
+    - $n=m$, então a probabilidade de cobertura é aproximadamente 95%;
+    - $n > m, então a probabilidade de cobertura é aproximadamente 95%;
+    - $n >> m$, melhor não usar.
+
+## Exemplo
+
+Dados para medir impacto do ozônio no ganho de peso em ratos. À esquerda está a banda-S e, à direita, a banda-W
+
+```{r,message=FALSE,results='hide'}
+library(WRS)
+oz <- read.table("ozone.txt")
+par(pty="s",mfrow=c(1,2))
+sband(oz$V1,as.numeric(oz$V2))
+wband(oz$V1,as.numeric(oz$V2),plotit = T)
+```
+
+## Exemplo
+
+A figura abaixo mostra o intervalo criado para os decis somente.
+```{r,results='hide'}
+shifthd(oz$V1,as.numeric(oz$V2),plotit = T)
+```
+

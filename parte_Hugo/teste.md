@@ -27,7 +27,7 @@ Estratégia (continuação)
 ========================================================
 - Define-se: $l = \frac{\alpha}{2} B$ e $u = B - l$;
 
-- Assim, um I.C. por bootstrap é: $[D_{l+1}^{*}, D_{u}^{*}]$, tal que $D_{1}^{*} \le \dots \le D_{B}^{*}$;
+- Assim, um I.C. por bootstrap é: $[D_{(l+1)}^{*}, D_{(u)}^{*}]$, tal que $D_{(1)}^{*} \le \dots \le D_{(B)}^{*}$;
 
 Sob a hipótese de igualdade das características
 ========================================================
@@ -91,46 +91,14 @@ Exemplo1: horas de exercícios por semana para sexo
 ========================================================
 
 
-```
-  F   M 
-169 193 
-```
+
+
+
+
+
+
+
 
 ```
-Gender: F
-[1] 8.110119
--------------------------------------------------------- 
-Gender: M
-[1] 9.875648
+Error in library(Lock5Data) : there is no package called 'Lock5Data'
 ```
-
-Exemplo1 (continuação)
-========================================================
-![plot of chunk unnamed-chunk-2](teste-figure/unnamed-chunk-2-1.png)
-
-Exemplo1 (continuação)
-========================================================
-![plot of chunk unnamed-chunk-3](teste-figure/unnamed-chunk-3-1.png)
-
-```
-[1] 0.5460346 2.9850226
-```
-
-Exemplo2 
-========================================================
-
-```
-       5%       95% 
- 4.027273 29.836364 
-```
-
-```
-     2.5%     97.5% 
- 1.463636 32.118182 
-```
-
-```
-     0.5%     99.5% 
--3.445455 36.354545 
-```
-
