@@ -91,14 +91,46 @@ Exemplo1: horas de exercícios por semana para sexo
 ========================================================
 
 
-
-
-
-
-
-
-
+```
+  F   M 
+169 193 
+```
 
 ```
-Error in library(Lock5Data) : there is no package called 'Lock5Data'
+Gender: F
+[1] 8.110119
+-------------------------------------------------------- 
+Gender: M
+[1] 9.875648
 ```
+
+Exemplo1 (continuação)
+========================================================
+![plot of chunk unnamed-chunk-2](teste-figure/unnamed-chunk-2-1.png)
+
+Exemplo1 (continuação)
+========================================================
+![plot of chunk unnamed-chunk-3](teste-figure/unnamed-chunk-3-1.png)
+
+```
+[1] 0.5947242 2.9363330
+```
+
+Exemplo2 
+========================================================
+
+```
+      5%      95% 
+ 4.00000 29.80045 
+```
+
+```
+     2.5%     97.5% 
+ 1.436364 32.081818 
+```
+
+```
+     0.5%     99.5% 
+-3.636364 36.336364 
+```
+
