@@ -9,9 +9,7 @@ Inferências baseadas em percentis pelo método de bootstrap
 ========================================================
 - Comparar dois grupos por uma característica de interesse $\theta_{j}$;
 
-- Isto pode ser feito por: $D = \theta_{1} - \theta_{2}$
-
-- Diferença representada por: $H_{0}: \theta_{1} = \theta_{2}$
+- Isto pode ser feito por: $H_{0}: \theta_{1} = \theta_{2}$
 
 - Como comparar?
 
@@ -37,7 +35,7 @@ Sob a hipótese de igualdade das características
 
 - $p^{*}$ é estimado por: $p^{*} = \frac{A}{B}$;
 
-- Por conveniência, define-se $\hat{p_{m}}^{*} = \min(\hat{p_{m}}^{*}, 1 - \hat{p_{m}}^{*})$; caso $2\hat{p_{m}}^{*} \le \alpha$, então rejeita-se $H_{0}$;
+- Por conveniência, define-se $\hat{p_{m}}^{*} = \min(p^{*}, 1 - p^{*})$; caso $2\hat{p_{m}}^{*} \le \alpha$, então rejeita-se $H_{0}$;
 
 
 Comparação de M-estimadores de locação
@@ -50,21 +48,16 @@ Comparação de M-estimadores de locação
   
   - assumir que as diferenças estimadas são normalmente distribuídas;
 
-
-Problemas
-========================================================
-- Tamanho amostral desconhecido para se usar o método;
-
-- Em particular quando a distribuição é assimétrica;
+- Problemas: distribuição amostral é assimétrica;
 
 Comparação de médias aparadas
 ========================================================
-- "Apara" $\ge$ 20%, a inferência baseada nos percentis de bootstrap é preferível em relação ao método t-bootstrap;
+- "Apara" $\ge$ 20%, a inferência baseada nos percentis de bootstrap ainda é razoável;
 
-- Para pequenas "aparas", melhor a precisão do método t-bootstrap;
+- Para pequenas "aparas", melhor a precisão de outro método;
   
-  - Incerteza do quão pequena é a "apara";
-    - De acordo com Keselman et al. (2004), o método t-bootstrap tem desempenho razoável para 10% - 15% de "apara";
+    - Incerteza do quão pequena é a "apara";
+    - De acordo com Keselman et al. razoável para 10% - 15% de "apara";
 
 Observações dos diferentes métodos
 ========================================================
@@ -72,17 +65,17 @@ Observações dos diferentes métodos
 - $n_{2} = 20$, amostra de uma população lognormal;
 
 - Com $\alpha = 0.05$ e 10% de "apara":
-  - $\alpha$ para método t-bootstrap $= 0,066$; 
+  - $\alpha$ para  outro método $= 0,066$; 
   - $\alpha$ para método percentil bootstrap $= 0,050$; 
   
 - $n_{1} = 20$, $n_{2} = 10$: 
-    - $\alpha$ para método t-bootstrap $= 0,082$; 
+    - $\alpha$ para outro método $= 0,082$; 
     - $\alpha$ para método percentil bootstrap $= 0,074$; 
 
 Observações dos diferentes métodos (continuação)
 ========================================================
 - $n_{1} = 20$, $n_{2} = 10$, $\alpha = 0.05$ e 20% de "apara": 
-  - $\alpha$ para método t-bootstrap $= 0,081$; 
+  - $\alpha$ para outro método $= 0,081$; 
   - $\alpha$ para método percentil bootstrap $= 0,063$; 
   
 - Em geral, ao fazer inferência com base nos percentis do método de bootstrap melhora o controle sobre o erro do tipo 1.  
@@ -108,29 +101,6 @@ Exemplo1 (continuação)
 ========================================================
 ![plot of chunk unnamed-chunk-2](teste-figure/unnamed-chunk-2-1.png)
 
-Exemplo1 (continuação)
-========================================================
-![plot of chunk unnamed-chunk-3](teste-figure/unnamed-chunk-3-1.png)
-
 ```
-[1] 0.5947242 2.9363330
+[1] 0.5612155 2.9698418
 ```
-
-Exemplo2 
-========================================================
-
-```
-      5%      95% 
- 4.00000 29.80045 
-```
-
-```
-     2.5%     97.5% 
- 1.436364 32.081818 
-```
-
-```
-     0.5%     99.5% 
--3.636364 36.336364 
-```
-

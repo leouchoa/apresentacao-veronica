@@ -9,9 +9,7 @@ Inferências baseadas em percentis pelo método de bootstrap
 ========================================================
 - Comparar dois grupos por uma característica de interesse $\theta_{j}$;
 
-- Isto pode ser feito por: $D = \theta_{1} - \theta_{2}$
-
-- Diferença representada por: $H_{0}: \theta_{1} = \theta_{2}$
+- Isto pode ser feito por: $H_{0}: \theta_{1} = \theta_{2}$
 
 - Como comparar?
 
@@ -37,7 +35,7 @@ Sob a hipótese de igualdade das características
 
 - $p^{*}$ é estimado por: $p^{*} = \frac{A}{B}$;
 
-- Por conveniência, define-se $\hat{p_{m}}^{*} = \min(\hat{p_{m}}^{*}, 1 - \hat{p_{m}}^{*})$; caso $2\hat{p_{m}}^{*} \le \alpha$, então rejeita-se $H_{0}$;
+- Por conveniência, define-se $\hat{p_{m}}^{*} = \min(p^{*}, 1 - p^{*})$; caso $2\hat{p_{m}}^{*} \le \alpha$, então rejeita-se $H_{0}$;
 
 
 Comparação de M-estimadores de locação
@@ -50,21 +48,16 @@ Comparação de M-estimadores de locação
   
   - assumir que as diferenças estimadas são normalmente distribuídas;
 
-
-Problemas
-========================================================
-- Tamanho amostral desconhecido para se usar o método;
-
-- Em particular quando a distribuição é assimétrica;
+- Problemas: distribuição amostral é assimétrica;
 
 Comparação de médias aparadas
 ========================================================
-- "Apara" $\ge$ 20%, a inferência baseada nos percentis de bootstrap é preferível em relação ao método t-bootstrap;
+- "Apara" $\ge$ 20%, a inferência baseada nos percentis de bootstrap ainda é razoável;
 
-- Para pequenas "aparas", melhor a precisão do método t-bootstrap;
+- Para pequenas "aparas", melhor a precisão de outro método;
   
-  - Incerteza do quão pequena é a "apara";
-    - De acordo com Keselman et al. (2004), o método t-bootstrap tem desempenho razoável para 10% - 15% de "apara";
+    - Incerteza do quão pequena é a "apara";
+    - De acordo com Keselman et al. razoável para 10% - 15% de "apara";
 
 Observações dos diferentes métodos
 ========================================================
@@ -72,17 +65,17 @@ Observações dos diferentes métodos
 - $n_{2} = 20$, amostra de uma população lognormal;
 
 - Com $\alpha = 0.05$ e 10% de "apara":
-  - $\alpha$ para método t-bootstrap $= 0,066$; 
+  - $\alpha$ para  outro método $= 0,066$; 
   - $\alpha$ para método percentil bootstrap $= 0,050$; 
   
 - $n_{1} = 20$, $n_{2} = 10$: 
-    - $\alpha$ para método t-bootstrap $= 0,082$; 
+    - $\alpha$ para outro método $= 0,082$; 
     - $\alpha$ para método percentil bootstrap $= 0,074$; 
 
 Observações dos diferentes métodos (continuação)
 ========================================================
 - $n_{1} = 20$, $n_{2} = 10$, $\alpha = 0.05$ e 20% de "apara": 
-  - $\alpha$ para método t-bootstrap $= 0,081$; 
+  - $\alpha$ para outro método $= 0,081$; 
   - $\alpha$ para método percentil bootstrap $= 0,063$; 
   
 - Em geral, ao fazer inferência com base nos percentis do método de bootstrap melhora o controle sobre o erro do tipo 1.  
@@ -104,17 +97,6 @@ Exemplo1 (continuação)
 ========================================================
 ```{r, echo=FALSE}
 library(ggplot2)
-ggplot(newStudent, aes(x=Gender,y=Exercise)) +
-geom_boxplot(color="red",outlier.colour="red") +
-geom_point(position = position_jitter(h=0,w=0.3)) +
-xlab('Sexo') +
-ylab('Horas de exercício por semana') 
-#coord_flip()
-```
-
-Exemplo1 (continuação)
-========================================================
-```{r, echo=FALSE}
 n = with(newStudent, by(Exercise, Gender, length))
 B = 1000
 female.samples = with(newStudent, matrix(sample(Exercise[Gender == "F"], size = n[1] *
@@ -132,31 +114,3 @@ me = 2 * sd(boot.stat)
 
 #round((xbars[2] - xbars[1]) + c(-1, 1) * me, 1)
 ```
-
-Exemplo2 
-========================================================
-```{r, echo=FALSE}
-require(Lock5Data)
-data(ImmuneTea)
-tea = with(ImmuneTea, InterferonGamma[Drink=="Tea"])
-coffee = with(ImmuneTea, InterferonGamma[Drink=="Coffee"])
-tea.mean = mean(tea)
-coffee.mean = mean(coffee)
-tea.n = length(tea)
-coffee.n = length(coffee)
-B = 100000
-
-tea.boot = numeric(B)
-coffee.boot = numeric(B)
-
-for ( i in 1:B ) {
-tea.boot[i] = mean(sample(tea,size=tea.n,replace=TRUE))
-coffee.boot[i] = mean(sample(coffee,size=coffee.n,replace=TRUE))
-}
-
-boot.stat = tea.boot - coffee.boot
-quantile(boot.stat,c(0.05,0.95))
-quantile(boot.stat,c(0.025,0.975))
-quantile(boot.stat,c(0.005,0.995))
-```
-
