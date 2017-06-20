@@ -21,11 +21,6 @@ Estratégia
 
 - Obter as diferenças: $D^{*} = \hat{\theta_{1}^{*}} - \hat{\theta_{2}^{*}}$, (B diferenças);
 
-Estratégia (continuação)
-========================================================
-- Define-se: $l = \frac{\alpha}{2} B$ e $u = B - l$;
-
-- Assim, um I.C. por bootstrap é: $[D_{(l+1)}^{*}, D_{(u)}^{*}]$, tal que $D_{(1)}^{*} \le \dots \le D_{(B)}^{*}$;
 
 Sob a hipótese de igualdade das características
 ========================================================
@@ -102,5 +97,5 @@ Exemplo1 (continuação)
 ![plot of chunk unnamed-chunk-2](teste-figure/unnamed-chunk-2-1.png)
 
 ```
-[1] 0.5612155 2.9698418
+[1] 0.5640759 2.9669814
 ```
