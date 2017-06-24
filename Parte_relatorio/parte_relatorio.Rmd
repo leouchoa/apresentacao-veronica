@@ -39,7 +39,7 @@ Departamento de Estatística}
 \begin{center}
 \vspace*{5cm}
 {\huge \bf Relatório \\[7pt]
-}
+Capítulo 5 - Comparação de dois grupos}
 \end{center}
 \vspace*{\stretch{1}}
 \begin{center}
