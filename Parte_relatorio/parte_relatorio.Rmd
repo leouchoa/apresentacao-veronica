@@ -1,6 +1,6 @@
 ---
 title: ""
-geometry: textwidth=18cm,textheight=24cm
+geometry: textwidth=15cm,textheight=20cm
 lang: pt-br
 header-includes:
 - \usepackage{setspace}
@@ -9,10 +9,10 @@ header-includes:
 - \usepackage{mathptmx}
 - \usepackage{enumerate}
 - \usepackage{url} 
-- \usepackage{lipsum}
+- \usepackage{float} 
 - \usepackage{multicol}
 output: pdf_document
-fontsize: 10bp
+fontsize: 20bp
 ---
 
 
@@ -58,7 +58,10 @@ Leonardo Uchoa Pedreira RA:156231\break
 \onehalfspacing
 \newpage
 
-#Introdução
+\tableofcontents
+\newpage
+
+#Introdução Sobre Bootstrap
 
 O método de bootstrap faz parte de uma classe de métodos não-paramétricos de Monte Carlo que estimam a distribuição de uma população ou uma característica (parâmetro de interesse) por meio de reamostragem.
 
@@ -119,7 +122,7 @@ newStudent = with(StudentSurvey, StudentSurvey[!is.na(Exercise), ])
 
 ```
 
-```{r grafico_ic, fig.cap="Gráfico da densidade das diferenças entre os valores das médias do número de horas de exercícios por semana para os sexos, das reamostras. Nota-se que possui uma característica muito familiar com a distribuição normal, isto é, sua densidade em formato de sino.", fig.asp=0.57, echo=FALSE}
+```{r grafico_ic, fig.cap="Gráfico da densidade das diferenças entre os valores das médias do número de horas de exercícios por semana para os sexos, das reamostras. Nota-se que possui uma característica muito familiar com a distribuição normal, isto é, sua densidade em formato de sino.", fig.asp=0.57, echo=FALSE,fig.pos="H"}
 set.seed(12)
 #library(ggplot2)
 #library(xtable)
@@ -142,3 +145,130 @@ ic = (xbars[2] - xbars[1]) + c(-1, 1) * me
 ic_boot.quantil = quantile(boot.stat, c(0.025, 0.975))
 #round((xbars[2] - xbars[1]) + c(-1, 1) * me, 1)
 ```
+
+\newpage
+
+# Função de Deslocamento
+
+A Função de Deslocamento (Shift Function) é uma técnica livre de distribuição criada e desenvolvida por Doksum e Sievers nos artigos dos anos 1974, 1976, 1977 (veja [1], [2] 3 [3]) de forma a obter uma forma mais robusta para comparar dois grupos (pacientes/tratamento e controle) sem precisar conhecer a distribuição destes grupos (um motivo é que, mesmo que se conheça a distribuição exata, o tratamento matemático do problema pode ser demasiado complexo). 
+
+Primeiramente, começamos a discussão por meio um de exemplo. Suponha que gostaríamos de comparar o grupo controle $X$ com o exposto ao tratamento $Y$ e sabemos que $X \sim N(0,1)$ e $Y \sim N(0,2)$. A forma tradicional de comparar estes grupos é utilizar uma medida que resuma toda a informação dos dados de maneira ótima. Para isto, é praxe utilizar a média. Modelos de Análise da Variância (veja [4]) são a forma mais tradicional (provavelmente também a mais conhecida e utiliza) para realizar esta comparação. Todavia, dois grupos podem diferir por outras formas, que não seja pela média. Para ilustrar esta situação, considere a figura abaixo.
+
+```{r,echo=FALSE,fig.align='center',fig.pos="H",fig.cap="Densidades de Probabilidade dos Grupo Controle (linha vermelha) e Grupo Tratamento (linha preta)."}
+curve(exp( (-x^2)/2 )/sqrt(2*pi),from = -4,to=4,ylab = "Densidade",main="Normal Padrão",col="red",lwd=3)
+curve(exp( (-x^2)/(4) )/sqrt(4*pi),from = -4,to=4,add = TRUE,lwd=3)
+```
+
+Claramente as médias são as mesmas. Todavia, note que o comportamento das densidades são diferentes em 3 regiões (tais intervalos são divididos pelos pontos onde as distribuições se encontram) : à esquerda do primeiro ponto de encontro, entre os dois pontos de encontro e à direita do segundo ponto de encontro. A primeira região nos conta que para pontos não tão extremos, os indivíduos grupo tratamento (linha preta) tem mais probabilidade de ocorrer do que aqueles do grupo controle (linha vermelha). Portanto, neste intervalo, é mais provavel que elementos deste grupo ocorram. Um exemplo é considerar estas distribuições como provenientes das notas (padronizadas) dos alunos. Para estudantes com notas baixas (região da esquerda), parece mais provável de ocorrerem notas baixas para os integrantes do grupo tratamento. Isto se repete na terceira região, mas não na segunda. Então parece que os subgrupos são bem diferentes, ao contrário do que a comparação pela média indica! Mas isto é natural, pois a média olha para os dados de forma diferente. Portanto, parece apropriado comparar estes grupos de outra forma.
+
+A maneira de tratar este problema, neste texto, será por meio da Função de Deslocamento. Mas primeiramente, devemos definir o que é um quantil.
+
+**Definição:** Seja $F_X(x)$ a distribuição de probabilidade de uma variável aleatória $X$. Então o quantil de ordem q $x_q$ é $x_q = \text{inf} \{x:F_X(x) \geq q \}$.
+
+Para mais informações sobre as propriedades dos quantis, veja [7]. Agora podemos prosseguir para a função de deslocamento.
+
+**Definição: ** _Sejam $y_q$ e $x_q$ os quantis dos grupos de tratamento e controle, respectivamente .A Função de Deslocamento $\Delta(x_q)$ é definida como $\Delta(x_q) = y_q - x_q$_.
+
+O objetivo desta técnica é medir quanto o grupo controle deve deslocado de forma a ser comparável ao grupo experimental, para um quantil de ordem q. Esta simples técnica tem um apelo gráfico : grafique $x_q$ VS $\Delta(x_q)$. Ou seja, para um quantíl q, observe a diferença entre os quantís dos grupos tratamento e controle. 
+
+Formalmente, seja $X_1,\dots,X_n$ e $Y_1,\dots,Y_m$ variáveis aleatórias dos grupos controle e tratamento, respectivamente. Se $X_{(1)} \leq\dots \leq X_{(n)}$ são as estatísticas de ordem, então estimamos o q-ésimo quantil para o grupo controle pela distribuição empírica 
+
+$$
+\hat{F}(x) := \hat{q} = \frac{1}{n} \sum_{i=1}^n I(X_{(i)}\leq x),
+$$
+
+que nada mais é que a proporção de observações $X_{(i)}$ que são menores ou iguais do que $x$ (veja [5] ou [6]). Para os quantis do grupo tratamento, uma forma de estimar o quantil é também, ao utilizar as estatísticas de ordem de $Y_{j}$, onde $j=teto(\hat{q}m + 0.5)$. Com todas as estimativas descritas, $\hat{\Delta}(x_q) = Y_{(j)} - x_q$.
+
+## Inferência pela Função de Deslocamento
+
+
+### Banda-S e Banda-W
+Um dos maiores aspectos de interesse ao obter um estimador é criar intervalos de confiança para si. Neste caso, os intervalos para $\hat{\Delta}(x)$ terão confiança simultânea de $(1- \alpha)100$%, de forma que $\alpha$ é a probabilidade de erro do tipo 1. Existem vários tipos de banda de confiança mas, neste texto, comtemplaremos 3 delas : banda-S,banda-W e banda para os decis.
+
+Baseada na Distância de Kolmogorov $H(x) = sup_x|F(x) - G(x)|$ (veja [8] ou [9]), seja $c$ tal que $P(D \leq c) = 1 - \alpha$ (para formas de obter $c$, veja [10] e [11]), $X_0 := -\infty$ $X_{n+1}= \infty$. Para qualquer $x$ que satisfaça $X_{i} \leq x \leq X_{i+1}$, seja 
+
+$$
+k_{\pm} = \left[ m\left( \frac{i\sqrt{M} \pm nc}{n\sqrt{M}} \right)\right]^{\pm}
+$$
+onde $M = mn/(m+n)$ e a notação $z^{\pm}$ fala para aproximar $z$ pelo seu teto (ceil) ou chão (floor). Portanto, um IC($\Delta$;$(1- \alpha)100$%) é $[Y_{k_-} - x; Y_{(k_{+} + 1)} -x ]$, chamado de banda-S (veja [3] para mais detalhes).
+
+Outra opção é a banda-W, baseado na Distância de Kolmogorov Ponderada $H(x) = sup_{x} | \lambda F(x) - \lambda G(x) |$ onde $\lambda=\frac{n}{n+m}$ (veja [12] ou, sem tantos detalhes [7]).Novamente, para qualquer $x$ que satisfaça $X_{i} \leq x \leq X_{i+1}$, sejam $u=i/n$,
+
+$$
+h_{\pm} = \frac{u +c(1-\lambda)(1-2u\lambda) \pm \left( \sqrt{c^2(1-\lambda)^2 + 4uc(1-u)} \right)/2}{1\pm c(1-\lambda)^2}
+$$
+
+e $k_{\pm}= [ h_{\pm}m]^{\pm}$ como definido anteriormente (note que esta definição é levemente diferente do que é apresentado em [7]). Assim, a banda-W é o IC($\Delta(x)$;$(1-\alpha)$%), que é $[Y_{k_-} - x; Y_{(k_{+} + 1)} -x ]$.
+
+Alguns aspectos importantes sobre estes intervalos são:
+
+- A banda-S tende a ser mais (menos) sensível à diferenças no que ocorrem ao redor do centro (cauda) das distribuições do que a banda-W;
+- A banda-S forma intervalos assintóticamente mais largos e menos estáveis que a banda-W;
+- A banda-W fornece resultados exatos.
+
+### Intervalos para os Quantis Somente
+
+Estes intervalos são diferentes dos anteriores pois utilizam o estimador de Harrell-Davis (veja [7]) para obter estimativas dos quantis. Todavia os intervalos provém confiança simultânea (aproximada) para as nove funções de deslocamento. Ou seja, deseja-se obter intervalos para $y_q - x_q$. Ao considerar que os estimadores de Harrell-Davis são assintoticamente normais (veja [13]), pode-se obter obtervalos de confiança usual baseado na inversão de testes do tipo Wald. Portanto, sejam $\hat{\theta}_{qX}$ e $\hat{\theta}_{qY}$ os estimadores de Harrell-Davis para os q-ésimos decis de $X$ e $Y$, respectivamente. O resultado assintótico nos leva ao intervalo
+
+$$
+\hat{\theta}_{qX} - \hat{\theta}_{qY} \pm c \sqrt{\hat{\sigma}_{qx}^2 + \hat{\sigma}_{qy}^2}.
+$$
+
+Todavia, para obter estimativas mais precisas dos quantis, utiliza-se a técnica de bootstrap. Wilcox, 1995a, cita, todavia que
+
+- Podem ser mais eficientes o que as bandas-S/W se amostramos de distribuições com caudas leves;
+- Utilização de bootstrap para aumentar precisão dos erros padrão;
+- Intervalos aproximados;
+- Se as amostras não são normais e se 
+    - n = m, então a probabilidade de cobertura é razoavelmente próximo de 95%;
+    - n > m, então a probabilidade de cobertura é aproximadamente 95%;
+    - n >> m, a probabilidade do erro do tipo 1 pode ser muito menor do que o nível nominal, mesmo no melhor dos cenários.
+
+
+<!-- ## Exemplo -->
+
+<!-- ```{r,message=FALSE,results='hide'} -->
+<!-- library(WRS) -->
+<!-- oz <- read.table("ozone.txt") -->
+<!-- par(pty="s",mfrow=c(1,2)) -->
+<!-- sband(oz$V1,as.numeric(oz$V2)) -->
+<!-- wband(oz$V1,as.numeric(oz$V2),plotit = T) -->
+<!-- shifthd(oz$V1,as.numeric(oz$V2),plotit = T) -->
+<!-- ``` -->
+
+
+
+# Referências
+
+[1] Doksum, K. A. (1974). Empirical probability plots and statistical inference for nonlinear
+models in the two-sample case. Annals of Statistics, 2, 267–277.
+
+[2] Doksum, K. A. (1977). Some graphical methods in statistics. A review and some extensions.
+Statistica Neerlandica, 31, 53–68.
+
+[3] Doksum, K. A., & Sievers, G. L. (1976). Plotting with confidence: graphical comparisons of
+two populations. Biometrika, 63, 421–434.
+
+[4] Montgomery, Douglas C. Design and Analysis of Experiments, quinta edição, editora JOHN WILEY & SONS.
+
+[5] Notas de Aula da Professora Verônica Andrea Gonzalez-Lopes para o curso de Robustez.
+
+[6] Casella, George, L.Berger Roger. Statistical inference, editora Duxbury, segunda edição, 2002.
+
+[7] W,Rand. Introduction to Robust Estimation and Hypothesis Testing, terceira edição, editora Elsevier.
+
+[8] Kolmogorov A (1933). "Sulla determinazione empirica di una legge di distribuzione". G. Ist. Ital. Attuari. 4: 83–91.
+
+[9] C.,J.D. Gibbons. Nonparametric Statistical Inference, quinta edição, editora CRC 
+
+[10] Schröer, G., & Trenkler, D. (1995). Exact and randomization distributions of Kolmogorov-Smirnov tests two or three samples. Computational Statistics and Data
+Analysis, 20, 185–202.
+
+[11] Hilton, J. F., Mehta, C. R., & Patel, N. R. (1994). An algorithm for conducting exact Smirnov tests. Computational Statistics and Data Analysis, 19, 351–361.
+
+[12] Büning, H. (2001). Kolmogorov-Smirnov and Cramer-von Mises type two-sample tests with various weights. Communications in Statistics—Theory and Methods, 30, 847–866.
+
+[13] Yoshizawa, C. N., Sen, P. K., & Davis, C. E. (1985). Asymptotic equivalence of the Harrell-Davis median estimator and the sample median. Communications in Statistics–Theory & Methods, 14, 2129–2136.
+
+[14] Wilcox, R. R. (1995a). Comparing two independent groups via multiple quantiles. The
+Statistician, 44, 91–99.
